@@ -1,5 +1,5 @@
 // 🚨 [필수 교체] 1. Google Apps Script 배포 시 얻은 Web App URL로 교체하세요.
-const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwF7xpWaeQhvDtBOsE8txJ005yGuCOoucB8_oVdVXgmMXRdy-d14IfuG37SqiATsxDj/exec'; 
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxNHw3sRbzuOTtDL7jFxmPaOGVLtn9WaR792DryyyJTJ7FxsRF4iw3WwWS_B8sgQB5V/exec'; 
 
 // 🚨 [필수 교체] 2. Google Sheets에서 차트 게시 후 얻은 iframe src 속성 값으로 교체하세요.
 const CHART_EMBED_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRuD1zwZn-7ezRlEQdw_UHa1wlMeuGi6-IjQOhEmGVbZMFulx1dnWAmdnJ26b2xRSG5MS1LDKL25Q0R/pubchart?oid=931016829&amp;format=image'; 

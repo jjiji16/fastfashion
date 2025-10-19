@@ -1,0 +1,73 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+/* 배경: 그린-블루 그라데이션 */
+.background-gradient {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #a8e063, #56ab2f, #2a8192); /* 연두색-진한 녹색-청록색 계열 */
+    padding: 20px 0;
+}
+
+/* 컨테이너: 화이트 계열 */
+.container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #ffffff; /* 순수 화이트 대신 약간의 아이보리 계열도 좋음 */
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #5cb85c;
+    padding-bottom: 10px;
+}
+
+fieldset {
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-bottom: 25px;
+    border-radius: 8px;
+}
+
+legend {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #0d8349; /* 진한 녹색 */
+    padding: 0 10px;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+input[type="radio"] {
+    margin-right: 10px;
+}
+
+/* 버튼: 그린 */
+#submitBtn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background-color: #4CAF50; /* 그린 계열 */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#submitBtn:hover {
+    background-color: #45a049;
+}

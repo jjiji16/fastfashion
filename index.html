@@ -85,6 +85,7 @@ input[type="radio"] {
 
 #submitBtn:hover {
     background-color: #45a049;
+
 }
 </style>
 </head>
@@ -141,85 +142,118 @@ input[type="radio"] {
         </div>
     </div>
 <script id="jsbin-javascript">
-// 🚨 [필수] 사용자 본인의 Google Forms URL과 차트 임베드 URL로 변경해야 합니다.
-// 1. Google Form의 '제출 URL' (Form의 'action' 속성에서 추출)
-const GOOGLE_FORM_ACTION_URL = 'https://docs.google.com/forms/u/0/d/e/YOUR_FORM_KEY/formResponse'; 
+// 🚨 [필수 교체] 1. Google Apps Script 배포 시 얻은 Web App URL로 교체하세요.
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzj4KJBdbGQqpxB9QvSAm9A1JYBpYAiIauNhLU_axj0gZPGLRJOzfIPZA35JudkYjU7/exec'; 
 
-// 2. Google Sheets에서 차트를 '웹에 게시'하여 얻은 임베드 URL
-const CHART_EMBED_URL = 'https://docs.google.com/spreadsheets/d/e/YOUR_SHEET_KEY/pubchart?oid=YOUR_CHART_ID&amp;format=image'; 
+// 🚨 [필수 교체] 2. Google Sheets에서 차트 게시 후 얻은 iframe src 속성 값으로 교체하세요.
+const CHART_EMBED_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRuD1zwZn-7ezRlEQdw_UHa1wlMeuGi6-IjQOhEmGVbZMFulx1dnWAmdnJ26b2xRSG5MS1LDKL25Q0R/pubchart?oid=931016829&amp;format=image'; 
 
-// 🚨 [필수] Google Form 미리보기 페이지에서 확인한 각 질문의 고유 'entry.' ID로 변경해야 합니다.
-const ENTRY_IDS = {
-    // 예시 ID입니다. 실제 ID로 교체하세요!
-    q1: 'entry.123456789', // 1.옷을 얼마나 구매하시나요?
-    q2: 'entry.987654321', // 2.한 번 구매시 몇 벌을 구매하시나요?
-    q3: 'entry.112233445', // 3.주로 어디서 구매하시나요?
-    q4: 'entry.556677889', // 4.구매한 옷은 얼마나 오래 입나요?
-    q5: 'entry.998877665'  // 5.패스트 패션에 대해 어느정도 알고계시나요?
-};
-
+// 폼 제출 이벤트 리스너
 document.getElementById('surveyForm').addEventListener('submit', function(event) {
     event.preventDefault();
-    
-    // 폼 데이터 수집
-    const formData = new FormData(this);
-    const data = new URLSearchParams();
-    
-    // 폼 데이터의 키를 Google Forms의 엔트리 ID에 매핑
-    formData.forEach((value, key) => {
-        if (ENTRY_IDS[key]) {
-            data.append(ENTRY_IDS[key], value);
-        }
-    });
 
-    // Google Form 엔드포인트로 데이터 비동기 전송
-    fetch(GOOGLE_FORM_ACTION_URL, {
+    if (!this.checkValidity()) {
+        return; 
+    }
+
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = '제출 중...';
+    
+    const formData = new FormData(this);
+    
+    // 데이터 객체 구성 (Google Apps Script의 doPost 함수에서 사용할 키와 동일하게 설정)
+    const payload = {
+        q1: formData.get('q1'),
+        q2: formData.get('q2'),
+        q3: formData.get('q3'),
+        q4: formData.get('q4'),
+        q5: formData.get('q5')
+    };
+
+    // Google Apps Script Web App으로 JSON 데이터 전송
+    fetch(GOOGLE_APPS_SCRIPT_URL, {
         method: 'POST',
-        mode: 'no-cors', // CORS 문제 방지를 위해 'no-cors' 모드 사용
-        body: data 
+        // CORS 문제를 해결하고 JSON 데이터를 전송하기 위해 Headers를 설정합니다.
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded' // GAS는 이 유형을 선호합니다.
+        },
+        body: new URLSearchParams(payload) // JSON 대신 URL 인코딩된 형태로 전송
     })
-    .then(() => {
-        // 제출 성공 알림
-        alert('제출되었습니다. 실시간 설문조사 결과 페이지로 이동합니다.');
+    .then(response => {
+        // GAS는 성공 시 HTML 응답을 반환할 수 있으므로, 응답 상태만 확인합니다.
+        if (response.ok || response.status === 200 || response.type === 'opaque') {
+             // 성공적인 전송 후 팝업 표시
+            document.getElementById('submissionModal').style.display = 'flex';
+            
+            // 팝업의 '확인' 버튼 클릭 시 결과 페이지로 전환
+            document.getElementById('closeModalBtn').onclick = () => {
+                document.getElementById('submissionModal').style.display = 'none';
+                showResultPage();
+            };
+        } else {
+             // 서버 오류가 발생한 경우 (Web App이 배포되지 않았거나 URL이 잘못된 경우)
+            console.error('GAS Submission Error Status:', response.status);
+            alert('데이터 전송에 실패했습니다. Apps Script URL 및 배포 설정을 확인해주세요.');
+        }
         
-        // 결과 페이지로 화면 전환
-        showResultPage();
+        submitBtn.disabled = false;
+        submitBtn.textContent = '제출하기';
     })
     .catch(error => {
-        console.error('Submission Error:', error);
-        alert('제출 중 오류가 발생했습니다.');
+        // 네트워크 오류
+        console.error('Network Error:', error);
+        submitBtn.disabled = false;
+        submitBtn.textContent = '제출하기';
+        alert('네트워크 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
     });
 });
 
+/**
+ * 설문조사 결과 페이지로 화면을 전환하고 Google Sheets의 차트를 표시합니다.
+ */
 function showResultPage() {
-    const container = document.querySelector('.container');
+    // 설문 섹션 숨기기
+    document.getElementById('surveySection').style.display = 'none';
     
-    // 결과 페이지 레이아웃 변경 (이전에 작성된 CSS 스타일 유지)
-    container.innerHTML = `
-        <h2>📊 설문조사 실시간 결과</h2>
-        <p>Google Sheets에 수집된 데이터가 반영된 실시간 그래프입니다.</p>
+    // 결과 섹션 보이기 및 내용 구성
+    const resultSection = document.getElementById('resultSection');
+    resultSection.style.display = 'block';
+
+    resultSection.innerHTML = `
+        <h2 class="text-3xl font-extrabold text-blue-800 text-center mb-6 pt-4">📊 설문조사 실시간 결과</h2>
+        <p class="text-lg text-gray-700 text-center mb-8">
+            Google Sheets에 수집된 설문조사 결과가 실시간으로 업데이트되는 그래프입니다.
+        </p>
         
-        <div class="chart-area" style="margin-bottom: 40px;">
+        <!-- Google Sheets에서 웹에 게시한 차트 iframe -->
+        <div class="chart-area mt-4 mb-10">
             <iframe 
                 src="${CHART_EMBED_URL}"
                 width="100%" 
-                height="450" 
+                height="550" 
                 frameborder="0" 
-                scrolling="no" 
-                style="border: 1px solid #ccc; border-radius: 8px;">
+                loading="lazy"
+                allowfullscreen>
             </iframe>
+            <p class="text-sm text-center text-gray-500 mt-2">차트는 Google Sheets의 데이터 업데이트 주기에 따라 반영됩니다.</p>
         </div>
         
-        <hr>
+        <hr class="border-t-2 border-gray-300 my-8">
         
-        <h2>📜 패스트 패션이란?</h2>
-        <div class="fast-fashion-info">
-            <p><strong>패스트 패션(Fast Fashion)</strong>은 최신 유행을 즉각 반영하여 빠르게 상품을 제작하고 유통하는 의류 산업의 비즈니스 모델입니다. 이 모델은 환경 오염, 노동 착취 등의 문제를 야기하며, 지속 가능한 소비에 대한 고민을 요구합니다.</p>
+        <!-- 스크롤 하단의 패스트 패션 텍스트 -->
+        <h2 class="text-2xl font-bold text-green-700 mb-4">📜 패스트 패션이란?</h2>
+        <div class="fast-fashion-info text-gray-800 space-y-4">
+            <p>
+                <strong>패스트 패션(Fast Fashion)</strong>은 최신 유행을 즉각 반영하여 빠르게 상품을 제작하고 유통하는 의류 산업의 비즈니스 모델입니다. 저렴한 가격으로 소비자들에게 다양한 선택지를 제공하지만, 환경 오염과 노동 문제의 주범으로 지목되기도 합니다.
+            </p>
+            <p>
+                이 모델은 옷의 수명을 극도로 단축시켜 의류 폐기물을 증가시키며, 생산 과정에서 대량의 물과 화학 물질을 사용합니다. 본 설문조사는 우리가 일상 속에서 얼마나 패스트 패션에 의존하고 있는지 돌아보고 지속 가능한 패션에 대해 생각해보는 계기가 될 것입니다.
+            </p>
         </div>
     `;
     
-    // 페이지를 맨 위로 스크롤하여 결과를 보여줍니다.
-    window.scrollTo(0, 0);
+    window.scrollTo(0, 0); // 결과 페이지 상단으로 이동
 }
 </script>
 </body>

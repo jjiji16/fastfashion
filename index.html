@@ -9,98 +9,78 @@
     <style id="jsbin-css">
         /* 설문 페이지 기본 스타일 */
         body {
-            font-family: 'Inter', Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-            background-color: #f0fdf4; /* 배경색 */
-        }
-        .background-gradient {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #a8e063, #56ab2f, #2a8192); /* 연두색-청록색 그라데이션 */
-            padding: 20px 0;
-        }
-        .container {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 30px;
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #5cb85c;
-            padding-bottom: 10px;
-        }
-        fieldset {
-            border: 1px solid #ccc;
-            padding: 20px;
-            margin-bottom: 25px;
-            border-radius: 8px;
-        }
-        legend {
-            font-size: 1.1em;
-            font-weight: bold;
-            color: #0d8349; 
-            padding: 0 10px;
-        }
-        label {
-            display: block;
-            margin-bottom: 10px;
-            cursor: pointer;
-        }
-        input[type="radio"] {
-            margin-right: 10px;
-        }
-        #submitBtn {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        #submitBtn:hover {
-            background-color: #45a049;
-        }
-        
-        /* Modal Style (팝업) */
-        .modal {
-            display: none; /* 초기에는 숨김 */
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.6);
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 30px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 400px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-        .modal-content h3 {
-            color: #28a745;
-            margin-bottom: 15px;
-            font-size: 1.5em;
-        }
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+/* 배경: 그린-블루 그라데이션 */
+.background-gradient {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #a8e063, #56ab2f, #2a8192); /* 연두색-진한 녹색-청록색 계열 */
+    padding: 20px 0;
+}
+
+/* 컨테이너: 화이트 계열 */
+.container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #ffffff; /* 순수 화이트 대신 약간의 아이보리 계열도 좋음 */
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #5cb85c;
+    padding-bottom: 10px;
+}
+
+fieldset {
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-bottom: 25px;
+    border-radius: 8px;
+}
+
+legend {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #0d8349; /* 진한 녹색 */
+    padding: 0 10px;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+input[type="radio"] {
+    margin-right: 10px;
+}
+
+/* 버튼: 그린 */
+#submitBtn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background-color: #4CAF50; /* 그린 계열 */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#submitBtn:hover {
+    background-color: #45a049;
+}
     </style>
 </head>
 <body>
@@ -294,3 +274,4 @@ function showResultPage() {
 </script>
 </body>
 </html>
+

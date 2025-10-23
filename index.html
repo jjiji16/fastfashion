@@ -1,146 +1,182 @@
 <!DOCTYPE html>
-<!--
-Created using JS Bin
-http://jsbin.com
-
-Copyright (c) 2025 by jjiji16 (http://jsbin.com/sezojus/2/edit)
-
-Released under the MIT license: http://jsbin.mit-license.org
--->
-<meta name="robots" content="noindex">
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>입을 옷이 없다고? : 패스트 패션 설문조사</title>
-<style id="jsbin-css">
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    line-height: 1.6;
-}
-
-/* 배경: 그린-블루 그라데이션 */
-.background-gradient {
-    min-height: 100vh;
-    background: linear-gradient(135deg, #a8e063, #56ab2f, #2a8192); /* 연두색-진한 녹색-청록색 계열 */
-    padding: 20px 0;
-}
-
-/* 컨테이너: 화이트 계열 */
-.container {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 30px;
-    background-color: #ffffff; /* 순수 화이트 대신 약간의 아이보리 계열도 좋음 */
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-h1 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 30px;
-    border-bottom: 2px solid #5cb85c;
-    padding-bottom: 10px;
-}
-
-fieldset {
-    border: 1px solid #ccc;
-    padding: 20px;
-    margin-bottom: 25px;
-    border-radius: 8px;
-}
-
-legend {
-    font-size: 1.1em;
-    font-weight: bold;
-    color: #0d8349; /* 진한 녹색 */
-    padding: 0 10px;
-}
-
-label {
-    display: block;
-    margin-bottom: 10px;
-    cursor: pointer;
-}
-
-input[type="radio"] {
-    margin-right: 10px;
-}
-
-/* 버튼: 그린 */
-#submitBtn {
-    display: block;
-    width: 100%;
-    padding: 15px;
-    background-color: #4CAF50; /* 그린 계열 */
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 1.1em;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-#submitBtn:hover {
-    background-color: #45a049;
-
-}
-</style>
+    <!-- Tailwind CSS CDN: 결과 페이지 스타일링을 위해 필수 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style id="jsbin-css">
+        /* 설문 페이지 기본 스타일 */
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            background-color: #f0fdf4; /* 배경색 */
+        }
+        .background-gradient {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #a8e063, #56ab2f, #2a8192); /* 연두색-청록색 그라데이션 */
+            padding: 20px 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #5cb85c;
+            padding-bottom: 10px;
+        }
+        fieldset {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+        }
+        legend {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #0d8349; 
+            padding: 0 10px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+        #submitBtn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #submitBtn:hover {
+            background-color: #45a049;
+        }
+        
+        /* Modal Style (팝업) */
+        .modal {
+            display: none; /* 초기에는 숨김 */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 30px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .modal-content h3 {
+            color: #28a745;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+    </style>
 </head>
 <body>
     <div class="background-gradient">
         <div class="container">
-            <h1>입을 옷이 없다고? : 패스트 패션 설문조사</h1>
-            <form id="surveyForm">
-                
-                <fieldset>
-                    <legend>1. 옷을 얼마나 구매하시나요?</legend>
-                    <label><input type="radio" name="q1" value="일주일" required> 일주일</label><br>
-                    <label><input type="radio" name="q1" value="한달"> 한달</label><br>
-                    <label><input type="radio" name="q1" value="3개월"> 3개월</label><br>
-                    <label><input type="radio" name="q1" value="6개월"> 6개월</label><br>
-                    <label><input type="radio" name="q1" value="1년 혹은 그 이상"> 1년 혹은 그 이상</label>
-                </fieldset>
+            <!-- 1. 설문 섹션 (ID: surveySection) - 자바스크립트가 숨기려는 영역 -->
+            <div id="surveySection"> 
+                <h1>입을 옷이 없다고? : 패스트 패션 설문조사</h1>
+                <form id="surveyForm">
+                    <!-- 설문 항목 1~5 (생략된 내용) -->
+                    <fieldset>
+                        <legend>1. 옷을 얼마나 구매하시나요?</legend>
+                        <label><input type="radio" name="q1" value="일주일" required> 일주일</label><br>
+                        <label><input type="radio" name="q1" value="한달"> 한달</label><br>
+                        <label><input type="radio" name="q1" value="3개월"> 3개월</label><br>
+                        <label><input type="radio" name="q1" value="6개월"> 6개월</label><br>
+                        <label><input type="radio" name="q1" value="1년 혹은 그 이상"> 1년 혹은 그 이상</label>
+                    </fieldset>
 
-                <fieldset>
-                    <legend>2. 한 번 구매시 몇 벌을 구매하시나요?</legend>
-                    <label><input type="radio" name="q2" value="1벌" required> 1벌</label><br>
-                    <label><input type="radio" name="q2" value="2~3벌"> 2~3벌</label><br>
-                    <label><input type="radio" name="q2" value="4~5벌"> 4~5벌</label><br>
-                    <label><input type="radio" name="q2" value="6벌 이상"> 6벌 이상</label>
-                </fieldset>
+                    <fieldset>
+                        <legend>2. 한 번 구매시 몇 벌을 구매하시나요?</legend>
+                        <label><input type="radio" name="q2" value="1벌" required> 1벌</label><br>
+                        <label><input type="radio" name="q2" value="2~3벌"> 2~3벌</label><br>
+                        <label><input type="radio" name="q2" value="4~5벌"> 4~5벌</label><br>
+                        <label><input type="radio" name="q2" value="6벌 이상"> 6벌 이상</label>
+                    </fieldset>
 
-                <fieldset>
-                    <legend>3. 주로 어디서 구매하시나요?</legend>
-                    <label><input type="radio" name="q3" value="온라인 쇼핑몰" required> 온라인 쇼핑몰</label><br>
-                    <label><input type="radio" name="q3" value="브랜드 매장"> 브랜드 매장</label><br>
-                    <label><input type="radio" name="q3" value="오프라인 편집샵, 보세"> 오프라인 편집샵, 보세</label><br>
-                    <label><input type="radio" name="q3" value="중고 거래(온/오프라인)"> 중고 거래(온/오프라인)</label><br>
-                    <label><input type="radio" name="q3" value="기타"> 기타</label>
-                </fieldset>
+                    <fieldset>
+                        <legend>3. 주로 어디서 구매하시나요?</legend>
+                        <label><input type="radio" name="q3" value="온라인 쇼핑몰" required> 온라인 쇼핑몰</label><br>
+                        <label><input type="radio" name="q3" value="브랜드 매장"> 브랜드 매장</label><br>
+                        <label><input type="radio" name="q3" value="오프라인 편집샵, 보세"> 오프라인 편집샵, 보세</label><br>
+                        <label><input type="radio" name="q3" value="중고 거래(온/오프라인)"> 중고 거래(온/오프라인)</label><br>
+                        <label><input type="radio" name="q3" value="기타"> 기타</label>
+                    </fieldset>
 
-                <fieldset>
-                    <legend>4. 구매한 옷은 얼마나 오래 입나요?</legend>
-                    <label><input type="radio" name="q4" value="1년 미만" required> 1년 미만</label><br>
-                    <label><input type="radio" name="q4" value="2~3년"> 2~3년</label><br>
-                    <label><input type="radio" name="q4" value="5년 이상"> 5년 이상</label><br>
-                    <label><input type="radio" name="q4" value="망가지지 않는한 버리지 않는다"> 망가지지 않는한 버리지 않는다</label>
-                </fieldset>
+                    <fieldset>
+                        <legend>4. 구매한 옷은 얼마나 오래 입나요?</legend>
+                        <label><input type="radio" name="q4" value="1년 미만" required> 1년 미만</label><br>
+                        <label><input type="radio" name="q4" value="2~3년"> 2~3년</label><br>
+                        <label><input type="radio" name="q4" value="5년 이상"> 5년 이상</label><br>
+                        <label><input type="radio" name="q4" value="망가지지 않는한 버리지 않는다"> 망가지지 않는한 버리지 않는다</label>
+                    </fieldset>
 
-                <fieldset>
-                    <legend>5. 패스트 패션에 대해 어느정도 알고계시나요?</legend>
-                    <label><input type="radio" name="q5" value="잘 알고 있다" required> 잘 알고 있다</label><br>
-                    <label><input type="radio" name="q5" value="어느정도 알고 있다"> 어느정도 알고 있다</label><br>
-                    <label><input type="radio" name="q5" value="조금 알고 있다"> 조금 알고 있다</label><br>
-                    <label><input type="radio" name="q5" value="잘 모른다"> 잘 모른다</label>
-                </fieldset>
+                    <fieldset>
+                        <legend>5. 패스트 패션에 대해 어느정도 알고계시나요?</legend>
+                        <label><input type="radio" name="q5" value="잘 알고 있다" required> 잘 알고 있다</label><br>
+                        <label><input type="radio" name="q5" value="어느정도 알고 있다"> 어느정도 알고 있다</label><br>
+                        <label><input type="radio" name="q5" value="조금 알고 있다"> 조금 알고 있다</label><br>
+                        <label><input type="radio" name="q5" value="잘 모른다"> 잘 모른다</label>
+                    </fieldset>
 
-                <button type="submit" id="submitBtn">제출하기</button>
-            </form>
+                    <button type="submit" id="submitBtn">제출하기</button>
+                </form>
+            </div> 
+
+            <!-- 2. 결과 섹션 (ID: resultSection) - 자바스크립트가 차트 및 정보를 로드할 빈 영역, 초기에는 숨김 -->
+            <div id="resultSection" style="display: none;">
+                <!-- JavaScript 로직에 의해 차트와 정보 텍스트가 여기에 삽입됩니다. -->
+            </div>
+
         </div>
     </div>
+    
+    <!-- 3. 제출 완료 모달 (ID: submissionModal) - 자바스크립트가 보여줄 팝업 창 -->
+    <div id="submissionModal" class="modal">
+        <div class="modal-content">
+            <h3>✅ 설문이 완료되었습니다!</h3>
+            <p>실시간으로 집계된 다른 참여자들의 응답 결과를 확인하시겠습니까?</p>
+            <!-- 팝업 내 버튼 (ID: closeModalBtn) - 클릭 시 결과 페이지로 전환 -->
+            <button id="closeModalBtn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4">
+                결과 보기
+            </button>
+        </div>
+    </div>
+    
 <script id="jsbin-javascript">
 // 🚨 [필수 교체] 1. Google Apps Script 배포 시 얻은 Web App URL로 교체하세요.
 const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxNHw3sRbzuOTtDL7jFxmPaOGVLtn9WaR792DryyyJTJ7FxsRF4iw3WwWS_B8sgQB5V/exec'; 
@@ -186,10 +222,10 @@ document.getElementById('surveyForm').addEventListener('submit', function(event)
         console.log('Submission successful, status:', response.status, 'type:', response.type);
         console.log('If data is not saving, check Google Apps Script "Executions" logs.');
 
-        // 성공적인 전송 후 팝업 표시
+        // 성공적인 전송 후 팝업 표시 (ID: submissionModal 사용)
         document.getElementById('submissionModal').style.display = 'flex';
         
-        // 팝업의 '결과 보기' 버튼 클릭 시 결과 페이지로 전환
+        // 팝업의 '결과 보기' 버튼 클릭 시 결과 페이지로 전환 (ID: closeModalBtn 사용)
         document.getElementById('closeModalBtn').onclick = () => {
             document.getElementById('submissionModal').style.display = 'none';
             showResultPage();
@@ -212,10 +248,10 @@ document.getElementById('surveyForm').addEventListener('submit', function(event)
  * 설문조사 결과 페이지로 화면을 전환하고 Google Sheets의 차트를 표시합니다.
  */
 function showResultPage() {
-    // 설문 섹션 숨기기
+    // 설문 섹션 숨기기 (ID: surveySection 사용)
     document.getElementById('surveySection').style.display = 'none';
     
-    // 결과 섹션 보이기 및 내용 구성
+    // 결과 섹션 보이기 및 내용 구성 (ID: resultSection 사용)
     const resultSection = document.getElementById('resultSection');
     resultSection.style.display = 'block';
 
@@ -258,7 +294,3 @@ function showResultPage() {
 </script>
 </body>
 </html>
-
-
-
-

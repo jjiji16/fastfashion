@@ -152,6 +152,7 @@ const CHART_EMBED_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRuD1zw
 document.getElementById('surveyForm').addEventListener('submit', function(event) {
     event.preventDefault();
 
+    // 폼 유효성 검사
     if (!this.checkValidity()) {
         return; 
     }
@@ -162,7 +163,7 @@ document.getElementById('surveyForm').addEventListener('submit', function(event)
     
     const formData = new FormData(this);
     
-    // 데이터 객체 구성 (Google Apps Script의 doPost 함수에서 사용할 키와 동일하게 설정)
+    // 전송할 데이터 객체 구성
     const payload = {
         q1: formData.get('q1'),
         q2: formData.get('q2'),
@@ -170,38 +171,37 @@ document.getElementById('surveyForm').addEventListener('submit', function(event)
         q4: formData.get('q4'),
         q5: formData.get('q5')
     };
+    
+    console.log('[DEBUG] Payload to be sent:', payload);
 
-    // Google Apps Script Web App으로 JSON 데이터 전송
+    // Google Apps Script Web App으로 데이터 전송
     fetch(GOOGLE_APPS_SCRIPT_URL, {
         method: 'POST',
-        // CORS 문제를 해결하고 JSON 데이터를 전송하기 위해 Headers를 설정합니다.
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded' // GAS는 이 유형을 선호합니다.
+            'Content-Type': 'application/x-www-form-urlencoded' 
         },
-        body: new URLSearchParams(payload) // JSON 대신 URL 인코딩된 형태로 전송
+        body: new URLSearchParams(payload) // URL 인코딩된 형태로 전송
     })
     .then(response => {
-        // 데이터가 시트로 모아지는 것이 확인되었으므로,
-        // 복잡한 응답 상태 확인 로직을 제거하고 무조건 성공 로직을 실행합니다.
         console.log('Submission successful, status:', response.status, 'type:', response.type);
+        console.log('If data is not saving, check Google Apps Script "Executions" logs.');
 
         // 성공적인 전송 후 팝업 표시
         document.getElementById('submissionModal').style.display = 'flex';
         
-        // 팝업의 '확인' 버튼 클릭 시 결과 페이지로 전환
+        // 팝업의 '결과 보기' 버튼 클릭 시 결과 페이지로 전환
         document.getElementById('closeModalBtn').onclick = () => {
             document.getElementById('submissionModal').style.display = 'none';
             showResultPage();
         };
 
-        // 버튼 복구
+        // 버튼 상태 복구
         submitBtn.disabled = false;
         submitBtn.textContent = '제출하기';
     })
     .catch(error => {
-        // 네트워크 오류 (이 경우만 데이터가 시트에 기록되지 않음)
+        // 네트워크 오류 처리
         console.error('Network Error:', error);
-        alert('네트워크 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
         
         submitBtn.disabled = false;
         submitBtn.textContent = '제출하기';
@@ -219,6 +219,7 @@ function showResultPage() {
     const resultSection = document.getElementById('resultSection');
     resultSection.style.display = 'block';
 
+    // Tailwind CSS 클래스를 사용하여 결과 페이지 HTML 생성
     resultSection.innerHTML = `
         <h2 class="text-3xl font-extrabold text-blue-800 text-center mb-6 pt-4">📊 설문조사 실시간 결과</h2>
         <p class="text-lg text-gray-700 text-center mb-8">
@@ -257,6 +258,7 @@ function showResultPage() {
 </script>
 </body>
 </html>
+
 
 
 
